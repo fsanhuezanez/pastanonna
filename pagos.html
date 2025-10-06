@@ -1,53 +1,241 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-  <title>Pagos Skeleton</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pagos — Pastas Nonna</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+    body{background:#f5f6f7;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+    .flag{height:8px;background:linear-gradient(90deg,#009246 33%,#fff 33% 66%,#ce2b37 66%)}
+    .hero{background:#fff;border:1px solid #e5e5e5;border-radius:10px}
+    .pill{border-radius:999px}
+    .method-btn{border:1px solid #e5e5e5}
+    .method-btn.active{border-color:#009246; box-shadow:0 0 0 2px rgba(0,146,70,.15)}
+    #toastArea{position:fixed;top:16px;right:16px;z-index:1080}
+  </style>
 </head>
 <body>
+  <div class="flag"></div>
 
-<div class="container-fluid my-3">
-  <div class="row g-3">
-    <!-- Columna izquierda: método de pago -->
-    <div class="col-12 col-md-4 border p-3">
-      <div class="border p-3 mb-3">método de pago</div>
-      <div class="border p-3 mb-2">tarjeta</div>
-      <div class="border p-3 mb-3">billetera digital</div>
+  <div class="container-fluid my-3">
+    <div class="d-flex justify-content-between align-items-center">
+      <strong>Pastas Nonna</strong>
+      <div class="d-flex gap-2">
+        <a class="btn btn-outline-secondary btn-sm" href="catalogo.html">← Seguir comprando</a>
+        <a class="btn btn-outline-secondary btn-sm" href="carrito.html">Ver carrito</a>
+      </div>
+    </div>
 
-      <div class="row g-2">
-        <div class="col-6">
-          <div class="border p-3 text-center">tarjeta guardada</div>
+    <div class="row g-3 mt-2" id="checkoutView">
+      <!-- Columna izquierda: método de pago -->
+      <div class="col-12 col-md-4">
+        <div class="hero p-3 mb-3">
+          <h6 class="text-success mb-2">Métodos de pago</h6>
+
+          <!-- Selector de método -->
+          <div class="d-grid gap-2">
+            <button id="btnTarjeta" class="btn method-btn text-start">💳 Tarjeta de crédito/débito</button>
+            <div id="formTarjeta" class="border rounded p-3 d-none">
+              <div class="mb-2">
+                <label class="form-label small">Número de tarjeta</label>
+                <input id="ccNum" type="text" class="form-control form-control-sm" placeholder="4111 1111 1111 1111">
+              </div>
+              <div class="row g-2">
+                <div class="col-6">
+                  <label class="form-label small">MM/AA</label>
+                  <input id="ccExp" type="text" class="form-control form-control-sm" placeholder="12/28">
+                </div>
+                <div class="col-6">
+                  <label class="form-label small">CVV</label>
+                  <input id="ccCvv" type="password" class="form-control form-control-sm" placeholder="123">
+                </div>
+              </div>
+            </div>
+
+            <button id="btnBilletera" class="btn method-btn text-start">💼 Billetera digital</button>
+            <div id="formBilletera" class="border rounded p-3 d-none">
+              <div class="mb-2">
+                <label class="form-label small">Usuario</label>
+                <input id="walUser" type="text" class="form-control form-control-sm" placeholder="usuario@correo.com">
+              </div>
+              <div>
+                <label class="form-label small">Contraseña</label>
+                <input id="walPass" type="password" class="form-control form-control-sm" placeholder="••••••••">
+              </div>
+            </div>
+          </div>
+
+          <hr class="my-3">
+          <h6 class="text-muted">Métodos guardados</h6>
+          <div class="row g-2">
+            <div class="col-6 d-grid">
+              <button id="btnTarjetaGuardada" class="btn btn-outline-success btn-sm">Tarjeta guardada</button>
+            </div>
+            <div class="col-6 d-grid">
+              <button id="btnPaypal" class="btn btn-outline-primary btn-sm">PayPal</button>
+            </div>
+          </div>
         </div>
-        <div class="col-6">
-          <div class="border p-3 text-center">billetera guardada</div>
+      </div>
+
+      <!-- Columna derecha: detalles de pago y envío -->
+      <div class="col-12 col-md-8">
+        <div class="hero p-3 mb-3">
+          <div class="d-flex justify-content-between align-items-center">
+            <h6 class="mb-0">Detalles de pago</h6>
+            <div class="fs-5 fw-semibold">Total: $<span id="totalMonto">0</span></div>
+          </div>
+        </div>
+
+        <div id="listaProductos" class="hero p-3 mb-3"></div>
+
+        <div class="hero p-4 mb-3 text-center">
+          <button id="btnPagar" class="btn btn-danger px-5">Pagar</button>
+        </div>
+
+        <!-- Direcciones -->
+        <div class="hero p-3">
+          <h6 class="text-center mb-3">Detalles de envío</h6>
+          <div class="mb-2">
+            <label class="form-label small">Dirección 1</label>
+            <input type="text" class="form-control" placeholder="Ej: Via Roma 123, Santiago">
+          </div>
+          <div class="mb-2">
+            <label class="form-label small">Dirección 2</label>
+            <input type="text" class="form-control" placeholder="Ej: Av. Italia 456, Providencia">
+          </div>
+          <div class="mb-2">
+            <label class="form-label small">Dirección 3</label>
+            <input type="text" class="form-control" placeholder="Ej: Las Pastas 789, Ñuñoa">
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Columna derecha: detalles de pago y envío -->
-    <div class="col-12 col-md-8 border p-3">
-      <div class="border p-3 mb-3 text-center">detalles de pago</div>
-
-      <div class="border p-3 mb-3">
-        <div class="row">
-          <div class="col-8">nombre producto</div>
-          <div class="col-4 text-end">$$$$</div>
+    <!-- Vista de confirmación -->
+    <div id="graciasView" class="row g-3 mt-2 d-none">
+      <div class="col-12 col-lg-8">
+        <div class="hero p-4">
+          <h5 class="fw-bold mb-2">¡Gracias por tu compra!</h5>
+          <p class="mb-2">Se ha confirmado tu pago en <strong>Pastas Nonna</strong>.</p>
+          <p class="mb-3">Tu número de pedido es <strong id="numPedido"></strong>.</p>
+          <a id="btnReenvio" href="#" class="link-primary">Solicitar reenvío de correo.</a>
         </div>
       </div>
-
-      <div class="border p-4 mb-4 text-center">botón pagar</div>
-
-      <div class="border p-3 mb-3 text-center">detalles de envío</div>
-      <div class="border rounded-pill p-3 mb-3 text-center">detalles 1</div>
-      <div class="border rounded-pill p-3 mb-3 text-center">detalles 2</div>
-      <div class="border rounded-pill p-3 mb-3 text-center">detalles 3</div>
-      <div class="border rounded-pill p-3 mb-3 text-center">detalles 4</div>
+      <div class="col-12 col-lg-4">
+        <div class="hero p-3">
+          <div class="d-flex justify-content-between">
+            <span>Detalles de pago</span>
+            <span class="fw-semibold">$<span id="totalGracias">0</span></span>
+          </div>
+          <hr>
+          <p class="text-muted small mb-1">Confirmación enviada a: contacto@nonnapastas.cl</p>
+          <p class="text-muted small">Teléfono: +56 9 5555 1234</p>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 
+  <div id="toastArea"></div>
+
+  <script>
+    const LS_KEY = "carrito";
+    const getCart = () => JSON.parse(localStorage.getItem(LS_KEY) || "[]");
+    const setCart = (c) => localStorage.setItem(LS_KEY, JSON.stringify(c));
+
+    const lista = document.getElementById('listaProductos');
+    const totalMonto = document.getElementById('totalMonto');
+
+    function formato(n){ return n.toLocaleString(); }
+
+    function renderResumen(){
+      const cart = getCart();
+      if(cart.length === 0){
+        lista.innerHTML = `<div class="text-center text-muted">Tu carrito está vacío.</div>`;
+        totalMonto.textContent = "0";
+        return;
+      }
+      let html = '';
+      let total = 0;
+      cart.forEach(it=>{
+        const sub = it.precio * it.cantidad;
+        total += sub;
+        html += `
+          <div class="row align-items-center py-2 border-bottom">
+            <div class="col-7">${it.nombre} <span class="text-muted">x${it.cantidad}</span></div>
+            <div class="col-5 text-end">$${formato(sub)}</div>
+          </div>`;
+      });
+      lista.innerHTML = html;
+      totalMonto.textContent = formato(total);
+    }
+
+    const btnTarjeta = document.getElementById('btnTarjeta');
+    const btnBilletera = document.getElementById('btnBilletera');
+    const formTarjeta = document.getElementById('formTarjeta');
+    const formBilletera = document.getElementById('formBilletera');
+    let metodo = null;
+
+    function setMetodo(m){
+      metodo = m;
+      [btnTarjeta, btnBilletera].forEach(b=>b.classList.remove('active'));
+      formTarjeta.classList.add('d-none');
+      formBilletera.classList.add('d-none');
+      if(m==='tarjeta'){btnTarjeta.classList.add('active');formTarjeta.classList.remove('d-none');}
+      if(m==='billetera'){btnBilletera.classList.add('active');formBilletera.classList.remove('d-none');}
+    }
+    btnTarjeta.onclick=()=>setMetodo('tarjeta');
+    btnBilletera.onclick=()=>setMetodo('billetera');
+
+    document.getElementById('btnTarjetaGuardada').onclick=()=>{
+      metodo='guardada';
+      showToast('Tarjeta guardada seleccionada','success');
+    };
+    document.getElementById('btnPaypal').onclick=()=>{
+      metodo='paypal';
+      showToast('PayPal seleccionado','success');
+    };
+
+    document.getElementById('btnPagar').onclick=()=>{
+      const cart=getCart();
+      if(cart.length===0){showToast('Carrito vacío','danger');return;}
+      if(!metodo){showToast('Selecciona un método de pago','warning');return;}
+
+      if(metodo==='tarjeta'){
+        const num=document.getElementById('ccNum').value.trim();
+        if(num.length<12){showToast('Número de tarjeta inválido','danger');return;}
+      }
+
+      const total=cart.reduce((s,i)=>s+i.precio*i.cantidad,0);
+      const pedido=Math.floor(100000+Math.random()*900000);
+      document.getElementById('numPedido').textContent=pedido;
+      document.getElementById('totalGracias').textContent=formato(total);
+      setCart([]);
+      renderResumen();
+      document.getElementById('checkoutView').classList.add('d-none');
+      document.getElementById('graciasView').classList.remove('d-none');
+      showToast('Pago completado correctamente','success');
+    };
+
+    document.getElementById('btnReenvio').onclick=(e)=>{
+      e.preventDefault();
+      showToast('Correo reenviado a tu bandeja.','primary');
+    };
+
+    function showToast(msg,variant='primary'){
+      const wrap=document.getElementById('toastArea');
+      const el=document.createElement('div');
+      el.className=`toast align-items-center text-bg-${variant} border-0 show mb-2`;
+      el.innerHTML=`<div class="d-flex"><div class="toast-body">${msg}</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto"></button></div>`;
+      wrap.appendChild(el);
+      setTimeout(()=>el.remove(),2800);
+    }
+
+    renderResumen();
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -75,7 +75,7 @@
     </div>
   </div>
 
-  <!-- Footer con contacto -->
+  <!-- Footer -->
   <footer>
     <div class="container text-center">
       <p class="fw-bold mb-1">🍝 Pastas Nonna</p>
@@ -86,45 +86,38 @@
     </div>
   </footer>
 
-  <!-- Toasts -->
   <div id="toastArea"></div>
 
   <script>
-    const productos = [
-      {id:1,nombre:"Spaghetti",tipo:"larga",precio:4990,img:"img/spaghetti.png"},
-      {id:2,nombre:"Penne",tipo:"corta",precio:5490,img:"img/penne.png"},
-      {id:3,nombre:"Fusilli",tipo:"corta",precio:4790,img:"img/fusilli.png"},
-      {id:4,nombre:"Ravioli",tipo:"rellena",precio:6990,img:"img/ravioli.png"},
-      {id:5,nombre:"Tagliatelle",tipo:"larga",precio:5990,img:"img/tagliatelle.png"},
-      {id:6,nombre:"Gnocchi",tipo:"rellena",precio:4990,img:"img/gnocchi.png"},
-      {id:7,nombre:"Farfalle",tipo:"corta",precio:4690,img:"img/farfalle.png"},
-      {id:8,nombre:"Linguine",tipo:"larga",precio:5190,img:"img/linguine.png"},
-      {id:9,nombre:"Rigatoni",tipo:"corta",precio:5490,img:"img/rigatoni.png"}
-    ];
+    const LS_KEY_CATALOGO = "productosCatalogo";
+    const LS_KEY_CARRITO = "carrito";
 
-    const LS_KEY="carrito";
-    const getCart=()=>JSON.parse(localStorage.getItem(LS_KEY)||"[]");
-    const setCart=(c)=>{localStorage.setItem(LS_KEY,JSON.stringify(c));updateBadge();};
-    const updateBadge=()=>{document.getElementById('cartCount').textContent=getCart().reduce((a,p)=>a+p.cantidad,0);};
+    const getCatalogo = () => JSON.parse(localStorage.getItem(LS_KEY_CATALOGO) || "[]");
+    const getCart = () => JSON.parse(localStorage.getItem(LS_KEY_CARRITO) || "[]");
+    const setCart = (c) => {localStorage.setItem(LS_KEY_CARRITO, JSON.stringify(c));updateBadge();};
+    const updateBadge = () => {document.getElementById('cartCount').textContent=getCart().reduce((a,p)=>a+p.cantidad,0);};
 
-    const catalogo=document.getElementById('catalogo');
+    const catalogoEl=document.getElementById('catalogo');
+
     function renderProductos(lista){
-      catalogo.innerHTML="";
+      catalogoEl.innerHTML="";
       lista.forEach(p=>{
         const col=document.createElement('div');
         col.className="col";
         col.innerHTML=`
           <div class="card-prod h-100 d-flex flex-column">
-            <img class="img-square" src="${p.img}" alt="${p.nombre}">
-            <div class="mt-2 small text-muted">${p.nombre}</div>
+            <a href="producto.html?item=${p.key}" class="text-decoration-none text-dark d-block">
+              <img class="img-square" src="${p.img}" alt="${p.nombre}">
+              <div class="mt-2 small text-muted">${p.nombre}</div>
+            </a>
             <div class="d-flex justify-content-between align-items-center">
               <span class="fw-semibold">$${p.precio.toLocaleString()}</span>
               <button class="btn btn-linea btn-sm" data-id="${p.id}">Agregar</button>
             </div>
           </div>`;
-        catalogo.appendChild(col);
+        catalogoEl.appendChild(col);
       });
-      catalogo.querySelectorAll('button[data-id]').forEach(btn=>{
+      catalogoEl.querySelectorAll('button[data-id]').forEach(btn=>{
         btn.onclick=()=>addToCart(parseInt(btn.dataset.id,10));
       });
     }
@@ -134,8 +127,9 @@
       const marcas=Array.from(document.querySelectorAll('.filtro:checked')).map(x=>x.value);
       const min=parseInt(document.getElementById('minPrice').value||"0",10);
       const max=parseInt(document.getElementById('maxPrice').value||"999999999",10);
+      const base=getCatalogo();
 
-      const lista=productos.filter(p=>{
+      const lista=base.filter(p=>{
         const byTexto=!texto||p.nombre.toLowerCase().includes(texto);
         const byTipo=marcas.length===0||marcas.includes(p.tipo);
         const byPrecio=p.precio>=min&&p.precio<=max;
@@ -145,14 +139,10 @@
       showToast(`Resultados: ${lista.length} producto(s)`,"success");
     }
 
-    document.getElementById('btnBuscar').onclick=filtrarProductos;
-    document.getElementById('searchInput').addEventListener('keyup',(e)=>{if(e.key==="Enter")filtrarProductos();});
-    document.getElementById('btnFiltrar').onclick=filtrarProductos;
-    document.querySelectorAll('.filtro').forEach(cb=>cb.onchange=filtrarProductos);
-
     function addToCart(id){
       const cart=getCart();
-      const prod=productos.find(p=>p.id===id);
+      const base=getCatalogo();
+      const prod=base.find(p=>p.id===id);
       const idx=cart.findIndex(p=>p.id===id);
       if(idx>-1)cart[idx].cantidad++;
       else cart.push({...prod,cantidad:1});
@@ -161,6 +151,10 @@
     }
 
     document.getElementById('btnCarrito').onclick=()=>location.href="carrito.html";
+    document.getElementById('btnBuscar').onclick=filtrarProductos;
+    document.getElementById('btnFiltrar').onclick=filtrarProductos;
+    document.getElementById('searchInput').addEventListener('keyup',(e)=>{if(e.key==="Enter")filtrarProductos();});
+    document.querySelectorAll('.filtro').forEach(cb=>cb.onchange=filtrarProductos);
 
     function showToast(msg,variant="primary"){
       const wrap=document.getElementById('toastArea');
@@ -172,7 +166,7 @@
       setTimeout(()=>el.remove(),2800);
     }
 
-    renderProductos(productos);
+    renderProductos(getCatalogo());
     updateBadge();
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
