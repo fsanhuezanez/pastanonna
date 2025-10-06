@@ -75,7 +75,7 @@
     </div>
   </div>
 
-  <!-- Footer -->
+  <!-- Footer con contacto -->
   <footer>
     <div class="container text-center">
       <p class="fw-bold mb-1">🍝 Pastas Nonna</p>
@@ -86,21 +86,40 @@
     </div>
   </footer>
 
+  <!-- Toasts -->
   <div id="toastArea"></div>
 
   <script>
+    // Claves de almacenamiento
     const LS_KEY_CATALOGO = "productosCatalogo";
     const LS_KEY_CARRITO = "carrito";
 
+    // Si NO hay catálogo en localStorage, sembramos con tus 9 productos iniciales
+    if (!localStorage.getItem(LS_KEY_CATALOGO)) {
+      const iniciales = [
+        {id:1, key:"spaghetti",   nombre:"Spaghetti",   tipo:"larga",   precio:4990, img:"img/spaghetti.png"},
+        {id:2, key:"fusilli",     nombre:"Fusilli",     tipo:"corta",   precio:4790, img:"img/fusilli.png"},
+        {id:3, key:"penne",       nombre:"Penne",       tipo:"corta",   precio:5490, img:"img/penne.png"},
+        {id:4, key:"ravioli",     nombre:"Ravioli",     tipo:"rellena", precio:6990, img:"img/ravioli.png"},
+        {id:5, key:"tagliatelle", nombre:"Tagliatelle", tipo:"larga",   precio:5990, img:"img/tagliatelle.png"},
+        {id:6, key:"gnocchi",     nombre:"Gnocchi",     tipo:"rellena", precio:4990, img:"img/gnocchi.png"},
+        {id:7, key:"farfalle",    nombre:"Farfalle",    tipo:"corta",   precio:4690, img:"img/farfalle.png"},
+        {id:8, key:"linguine",    nombre:"Linguine",    tipo:"larga",   precio:5190, img:"img/linguine.png"},
+        {id:9, key:"rigatoni",    nombre:"Rigatoni",    tipo:"corta",   precio:6490, img:"img/rigatoni.png"} // $6.490
+      ];
+      localStorage.setItem(LS_KEY_CATALOGO, JSON.stringify(iniciales));
+    }
+
+    // Helpers carrito
     const getCatalogo = () => JSON.parse(localStorage.getItem(LS_KEY_CATALOGO) || "[]");
-    const getCart = () => JSON.parse(localStorage.getItem(LS_KEY_CARRITO) || "[]");
-    const setCart = (c) => {localStorage.setItem(LS_KEY_CARRITO, JSON.stringify(c));updateBadge();};
-    const updateBadge = () => {document.getElementById('cartCount').textContent=getCart().reduce((a,p)=>a+p.cantidad,0);};
+    const getCart     = () => JSON.parse(localStorage.getItem(LS_KEY_CARRITO) || "[]");
+    const setCart     = (c) => { localStorage.setItem(LS_KEY_CARRITO, JSON.stringify(c)); updateBadge(); };
+    const updateBadge = () => { document.getElementById('cartCount').textContent = getCart().reduce((a,p)=>a+p.cantidad,0); };
 
-    const catalogoEl=document.getElementById('catalogo');
-
+    // Render catálogo
+    const catalogoEl = document.getElementById('catalogo');
     function renderProductos(lista){
-      catalogoEl.innerHTML="";
+      catalogoEl.innerHTML = "";
       lista.forEach(p=>{
         const col=document.createElement('div');
         col.className="col";
@@ -122,6 +141,7 @@
       });
     }
 
+    // Filtros / búsqueda
     function filtrarProductos(){
       const texto=document.getElementById('searchInput').value.trim().toLowerCase();
       const marcas=Array.from(document.querySelectorAll('.filtro:checked')).map(x=>x.value);
@@ -139,6 +159,7 @@
       showToast(`Resultados: ${lista.length} producto(s)`,"success");
     }
 
+    // Carrito
     function addToCart(id){
       const cart=getCart();
       const base=getCatalogo();
@@ -150,6 +171,7 @@
       showToast(`🛒 ${prod.nombre} agregado al carrito`,"primary");
     }
 
+    // UI events
     document.getElementById('btnCarrito').onclick=()=>location.href="carrito.html";
     document.getElementById('btnBuscar').onclick=filtrarProductos;
     document.getElementById('btnFiltrar').onclick=filtrarProductos;
@@ -166,6 +188,7 @@
       setTimeout(()=>el.remove(),2800);
     }
 
+    // Primera carga
     renderProductos(getCatalogo());
     updateBadge();
   </script>
