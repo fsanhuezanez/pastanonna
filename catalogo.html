@@ -1,199 +1,180 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <title>Catálogo</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Catálogo - Pastas Nonna</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <style>
-    .it-banner {
-      height: 10px;
-      background: linear-gradient(90deg,#128807 33%,#ffffff 33% 66%,#d50000 66%);
-    }
-    body { background:#fafafa; }
-    .hero { background:#fff; border:1px solid #e5e5e5; border-radius:10px; }
-    .img-skel {
-      width:100%;
-      aspect-ratio:1/1;       /* cuadradas */
-      border-radius:8px;
-      border:1px solid #eee;
-      object-fit:cover;
-      object-position:center;
-    }
-    .price { font-weight:600; }
+    body{background:#f5f6f7;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+    .flag{height:8px;background:linear-gradient(90deg,#009246 33%,#fff 33% 66%,#ce2b37 66%)}
+    .nav-bar{background:#fff;border-bottom:1px solid #e5e5e5}
+    .filtros{background:#fff;border:1px solid #e5e5e5;border-radius:8px;padding:16px}
+    .card-prod{background:#fff;border:1px solid #e5e5e5;border-radius:10px;padding:12px;transition:.15s}
+    .card-prod:hover{box-shadow:0 6px 18px rgba(0,0,0,.06)}
+    .img-square{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px;border:1px solid #eee}
+    .btn-linea{border:1px solid #009246;color:#009246;background:transparent}
+    .btn-linea:hover{background:#009246;color:#fff}
+    footer{background:#fff;border-top:1px solid #e5e5e5;padding:20px 0}
+    #toastArea{position:fixed;top:16px;right:16px;z-index:1080}
+    @media (max-width:576px){#toastArea{left:16px;right:16px}}
   </style>
 </head>
 <body>
+  <div class="flag"></div>
 
-<div class="container-fluid py-2">
-
-  <!-- HEADER -->
-  <div class="row border rounded-2 mb-2 hero">
-    <div class="it-banner rounded-top"></div>
-    <div class="col-12 d-flex justify-content-between align-items-center p-3">
-      <strong class="fs-5">Pastas Nonna</strong>
-      <nav class="d-flex gap-3">
-        <a href="#">Inicio</a>
-        <a href="#">Catálogo</a>
-        <a href="login.html">Login</a>
-      </nav>
-    </div>
-  </div>
-
-  <!-- CONTENIDO PRINCIPAL -->
-  <div class="row">
-    <!-- FILTROS -->
-    <div class="col-12 col-md-2 border rounded-2 p-3 mb-3 mb-md-0 hero">
-      <h6 class="mb-3 text-success">Filtros</h6>
-      <p class="text-muted mb-1">Tipo de pasta</p>
-      <div class="form-check"><input class="form-check-input" type="checkbox" id="f1"><label class="form-check-label" for="f1">Larga</label></div>
-      <div class="form-check"><input class="form-check-input" type="checkbox" id="f2"><label class="form-check-label" for="f2">Corta</label></div>
-      <div class="form-check"><input class="form-check-input" type="checkbox" id="f3"><label class="form-check-label" for="f3">Rellena</label></div>
-      <hr>
-      <p class="text-muted mb-1">Precio</p>
-      <div class="d-flex gap-2">
-        <input class="form-control form-control-sm" type="number" placeholder="Mín">
-        <input class="form-control form-control-sm" type="number" placeholder="Máx">
-      </div>
-      <button class="btn btn-sm btn-success mt-2 w-100">Aplicar</button>
-    </div>
-
-    <!-- GRID DE PRODUCTOS -->
-    <div class="col-12 col-md-10">
-      <!-- Barra superior -->
-      <div class="row border rounded-2 p-3 hero">
-        <div class="col-12 col-md-6 d-flex align-items-center gap-2">
-          <a class="btn btn-success btn-sm" href="carrito.html">Ver carrito</a>
-          <span class="text-muted">0 productos</span>
-        </div>
-        <div class="col-12 col-md-6 mt-2 mt-md-0">
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="Buscar pasta...">
-            <button class="btn btn-outline-danger">Buscar</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Productos -->
-      <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3 mt-3">
-        <div class="col">
-          <div class="border rounded-2 p-2 hero">
-            <a href="producto.html?item=spaghetti" class="text-decoration-none text-dark">
-              <img src="img/spaghetti.png" class="img-skel" alt="Spaghetti">
-              <div class="d-flex justify-content-between mt-2">
-                <span>Spaghetti</span><span class="price">$4.990</span>
-              </div>
-            </a>
-            <button class="btn btn-outline-success btn-sm mt-2 w-100">Agregar</button>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="border rounded-2 p-2 hero">
-            <a href="producto.html?item=penne" class="text-decoration-none text-dark">
-              <img src="img/penne.png" class="img-skel" alt="Penne">
-              <div class="d-flex justify-content-between mt-2">
-                <span>Penne</span><span class="price">$5.490</span>
-              </div>
-            </a>
-            <button class="btn btn-outline-success btn-sm mt-2 w-100">Agregar</button>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="border rounded-2 p-2 hero">
-            <a href="producto.html?item=fusilli" class="text-decoration-none text-dark">
-              <img src="img/fusilli.png" class="img-skel" alt="Fusilli">
-              <div class="d-flex justify-content-between mt-2">
-                <span>Fusilli</span><span class="price">$4.790</span>
-              </div>
-            </a>
-            <button class="btn btn-outline-success btn-sm mt-2 w-100">Agregar</button>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="border rounded-2 p-2 hero">
-            <a href="producto.html?item=ravioli" class="text-decoration-none text-dark">
-              <img src="img/ravioli.png" class="img-skel" alt="Ravioli">
-              <div class="d-flex justify-content-between mt-2">
-                <span>Ravioli</span><span class="price">$6.990</span>
-              </div>
-            </a>
-            <button class="btn btn-outline-success btn-sm mt-2 w-100">Agregar</button>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="border rounded-2 p-2 hero">
-            <a href="producto.html?item=tagliatelle" class="text-decoration-none text-dark">
-              <img src="img/tagliatelle.png" class="img-skel" alt="Tagliatelle">
-              <div class="d-flex justify-content-between mt-2">
-                <span>Tagliatelle</span><span class="price">$5.990</span>
-              </div>
-            </a>
-            <button class="btn btn-outline-success btn-sm mt-2 w-100">Agregar</button>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="border rounded-2 p-2 hero">
-            <a href="producto.html?item=gnocchi" class="text-decoration-none text-dark">
-              <img src="img/gnocchi.png" class="img-skel" alt="Gnocchi">
-              <div class="d-flex justify-content-between mt-2">
-                <span>Gnocchi</span><span class="price">$4.990</span>
-              </div>
-            </a>
-            <button class="btn btn-outline-success btn-sm mt-2 w-100">Agregar</button>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="border rounded-2 p-2 hero">
-            <a href="producto.html?item=farfalle" class="text-decoration-none text-dark">
-              <img src="img/farfalle.png" class="img-skel" alt="Farfalle">
-              <div class="d-flex justify-content-between mt-2">
-                <span>Farfalle</span><span class="price">$4.690</span>
-              </div>
-            </a>
-            <button class="btn btn-outline-success btn-sm mt-2 w-100">Agregar</button>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="border rounded-2 p-2 hero">
-            <a href="producto.html?item=linguine" class="text-decoration-none text-dark">
-              <img src="img/linguine.png" class="img-skel" alt="Linguine">
-              <div class="d-flex justify-content-between mt-2">
-                <span>Linguine</span><span class="price">$5.190</span>
-              </div>
-            </a>
-            <button class="btn btn-outline-success btn-sm mt-2 w-100">Agregar</button>
-          </div>
-        </div>
-
-        <div class="col">
-          <div class="border rounded-2 p-2 hero">
-            <a href="producto.html?item=rigatoni" class="text-decoration-none text-dark">
-              <img src="img/rigatoni.png" class="img-skel" alt="Rigatoni">
-              <div class="d-flex justify-content-between mt-2">
-                <span>Rigatoni</span><span class="price">$5.490</span>
-              </div>
-            </a>
-            <button class="btn btn-outline-success btn-sm mt-2 w-100">Agregar</button>
-          </div>
-        </div>
+  <!-- Header -->
+  <div class="nav-bar">
+    <div class="container-fluid py-2 d-flex justify-content-between align-items-center">
+      <strong>Pastas Nonna</strong>
+      <div class="d-flex gap-3">
+        <a href="login.html" class="text-decoration-none">Login</a>
+        <a href="admin.html" class="text-decoration-none">Admin</a>
       </div>
     </div>
   </div>
 
-  <!-- FOOTER -->
-  <div class="row border rounded-2 p-3 mt-3 hero">
-    <div class="it-banner rounded-bottom mb-2"></div>
-    <div class="col-12 text-center text-muted">© 2025 Pastas Nonna — Catálogo</div>
-  </div>
-</div>
+  <div class="container-fluid my-3">
+    <div class="row g-3">
+      <!-- Filtros -->
+      <aside class="col-12 col-md-2">
+        <div class="filtros">
+          <h6 class="text-success mb-2">Filtros</h6>
+          <small class="text-muted d-block mb-1">Tipo de pasta</small>
+          <div class="form-check"><input class="form-check-input filtro" type="checkbox" value="larga" id="fL"><label class="form-check-label" for="fL">Larga</label></div>
+          <div class="form-check"><input class="form-check-input filtro" type="checkbox" value="corta" id="fC"><label class="form-check-label" for="fC">Corta</label></div>
+          <div class="form-check"><input class="form-check-input filtro" type="checkbox" value="rellena" id="fR"><label class="form-check-label" for="fR">Rellena</label></div>
+          <hr class="my-3">
+          <small class="text-muted d-block mb-1">Precio</small>
+          <div class="d-flex gap-2">
+            <input id="minPrice" type="number" class="form-control form-control-sm" placeholder="Mín">
+            <input id="maxPrice" type="number" class="form-control form-control-sm" placeholder="Máx">
+          </div>
+          <button id="btnFiltrar" class="btn btn-success w-100 btn-sm mt-2">Aplicar</button>
+        </div>
+      </aside>
 
+      <!-- Catálogo -->
+      <main class="col-12 col-md-10">
+        <!-- Barra superior -->
+        <div class="row g-2 align-items-center mb-2">
+          <div class="col-12 col-md-3">
+            <button id="btnCarrito" class="btn btn-danger w-100">🛒 Carrito <span id="cartCount" class="badge bg-dark ms-1">0</span></button>
+          </div>
+          <div class="col-12 col-md-9">
+            <div class="input-group">
+              <input id="searchInput" type="text" class="form-control" placeholder="Buscar pasta...">
+              <button class="btn btn-outline-danger" id="btnBuscar">Buscar</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid productos -->
+        <div id="catalogo" class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3"></div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Footer con contacto -->
+  <footer>
+    <div class="container text-center">
+      <p class="fw-bold mb-1">🍝 Pastas Nonna</p>
+      <p class="mb-0 small text-muted">Propietaria: Nonna Maria Rossi</p>
+      <p class="mb-0 small text-muted">📞 +56 9 5555 1234</p>
+      <p class="small text-muted">📧 contacto@nonnapastas.cl</p>
+      <div class="flag mt-3"></div>
+    </div>
+  </footer>
+
+  <!-- Toasts -->
+  <div id="toastArea"></div>
+
+  <script>
+    const productos = [
+      {id:1,nombre:"Spaghetti",tipo:"larga",precio:4990,img:"img/spaghetti.png"},
+      {id:2,nombre:"Penne",tipo:"corta",precio:5490,img:"img/penne.png"},
+      {id:3,nombre:"Fusilli",tipo:"corta",precio:4790,img:"img/fusilli.png"},
+      {id:4,nombre:"Ravioli",tipo:"rellena",precio:6990,img:"img/ravioli.png"},
+      {id:5,nombre:"Tagliatelle",tipo:"larga",precio:5990,img:"img/tagliatelle.png"},
+      {id:6,nombre:"Gnocchi",tipo:"rellena",precio:4990,img:"img/gnocchi.png"},
+      {id:7,nombre:"Farfalle",tipo:"corta",precio:4690,img:"img/farfalle.png"},
+      {id:8,nombre:"Linguine",tipo:"larga",precio:5190,img:"img/linguine.png"},
+      {id:9,nombre:"Rigatoni",tipo:"corta",precio:5490,img:"img/rigatoni.png"}
+    ];
+
+    const LS_KEY="carrito";
+    const getCart=()=>JSON.parse(localStorage.getItem(LS_KEY)||"[]");
+    const setCart=(c)=>{localStorage.setItem(LS_KEY,JSON.stringify(c));updateBadge();};
+    const updateBadge=()=>{document.getElementById('cartCount').textContent=getCart().reduce((a,p)=>a+p.cantidad,0);};
+
+    const catalogo=document.getElementById('catalogo');
+    function renderProductos(lista){
+      catalogo.innerHTML="";
+      lista.forEach(p=>{
+        const col=document.createElement('div');
+        col.className="col";
+        col.innerHTML=`
+          <div class="card-prod h-100 d-flex flex-column">
+            <img class="img-square" src="${p.img}" alt="${p.nombre}">
+            <div class="mt-2 small text-muted">${p.nombre}</div>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="fw-semibold">$${p.precio.toLocaleString()}</span>
+              <button class="btn btn-linea btn-sm" data-id="${p.id}">Agregar</button>
+            </div>
+          </div>`;
+        catalogo.appendChild(col);
+      });
+      catalogo.querySelectorAll('button[data-id]').forEach(btn=>{
+        btn.onclick=()=>addToCart(parseInt(btn.dataset.id,10));
+      });
+    }
+
+    function filtrarProductos(){
+      const texto=document.getElementById('searchInput').value.trim().toLowerCase();
+      const marcas=Array.from(document.querySelectorAll('.filtro:checked')).map(x=>x.value);
+      const min=parseInt(document.getElementById('minPrice').value||"0",10);
+      const max=parseInt(document.getElementById('maxPrice').value||"999999999",10);
+
+      const lista=productos.filter(p=>{
+        const byTexto=!texto||p.nombre.toLowerCase().includes(texto);
+        const byTipo=marcas.length===0||marcas.includes(p.tipo);
+        const byPrecio=p.precio>=min&&p.precio<=max;
+        return byTexto&&byTipo&&byPrecio;
+      });
+      renderProductos(lista);
+      showToast(`Resultados: ${lista.length} producto(s)`,"success");
+    }
+
+    document.getElementById('btnBuscar').onclick=filtrarProductos;
+    document.getElementById('searchInput').addEventListener('keyup',(e)=>{if(e.key==="Enter")filtrarProductos();});
+    document.getElementById('btnFiltrar').onclick=filtrarProductos;
+    document.querySelectorAll('.filtro').forEach(cb=>cb.onchange=filtrarProductos);
+
+    function addToCart(id){
+      const cart=getCart();
+      const prod=productos.find(p=>p.id===id);
+      const idx=cart.findIndex(p=>p.id===id);
+      if(idx>-1)cart[idx].cantidad++;
+      else cart.push({...prod,cantidad:1});
+      setCart(cart);
+      showToast(`🛒 ${prod.nombre} agregado al carrito`,"primary");
+    }
+
+    document.getElementById('btnCarrito').onclick=()=>location.href="carrito.html";
+
+    function showToast(msg,variant="primary"){
+      const wrap=document.getElementById('toastArea');
+      const el=document.createElement('div');
+      el.className=`toast align-items-center text-bg-${variant} border-0 show mb-2`;
+      el.innerHTML=`<div class="d-flex"><div class="toast-body">${msg}</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>`;
+      wrap.appendChild(el);
+      setTimeout(()=>el.remove(),2800);
+    }
+
+    renderProductos(productos);
+    updateBadge();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
